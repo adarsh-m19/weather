@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="search-section">
+            <input type="search" placeholder="Enter city name" id="userInput" class="search-box">
+            <button onclick="dataget()" class="search-button"><i class='bx bx-search'></i></button>
+        </div>
+
+        <div class="weather-info" id="output">
+            
+        </div>
+    </div>
+
+    <script>
+        async function dataget(){
+            if (userInput.value != "") {
+                try {
+                    const weather = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${userInput.value}&appid=5b4bee0ba241d092159faf007e166080`)
+                    const result = await weather.json()
+
+                    if (result.status == 404) {
+                        output.innerHTML = `<h6 class="text-light">Country: ${result.message}</h6>`
+                    } else {
+                        output.innerHTML = `
+                            <h2>Weather in ${result.name}</h2>
+                            <hr>
+                            <p><strong>Temperature:</strong> ${result.main.temp} °C</p>
+                            <p><strong>Humidity:</strong> ${result.main.humidity}%</p>
+                            <p><strong>Wind Speed:</strong> ${result.wind.speed} km/h</p>
+                            <p><strong>Pressure:</strong> ${result.main.pressure} hPa</p>
+                        `;
+                    }
+                } catch (err) {
+                    console.log(err);
+                    alert("API failed! Try again later.");
+                }
+            } else {
+                output.innerHTML = `<h3 class="text-danger">Please enter a valid city name.</h3>`
+            }
+        }
+    </script>
+</body>
+
+</html>
